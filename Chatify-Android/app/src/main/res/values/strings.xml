@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Chatify Android</string>
+    <string name="email">Email</string>
+    <string name="ainda_n_o_sou_cadastrado">Ainda não sou cadastrado</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="auth_failed">Registration failed! Try again later.</string>
+</resources>
