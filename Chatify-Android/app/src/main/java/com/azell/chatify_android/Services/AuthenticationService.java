@@ -13,13 +13,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import timber.log.Timber;
 
 /**
  * Created by mcanhisares on 01/03/17.
  */
 
-public class AuthenticationService extends BaseService{
+public class AuthenticationService extends BaseService implements UserServiceListener{
 
     private FirebaseAuth firebaseAuth;
     private User currentUser;
@@ -51,27 +53,37 @@ public class AuthenticationService extends BaseService{
         return currentUser;
     }
 
-    private void updateCurrentUser() {
-        Query query = super.databaseReference.child("users")
-                .child(currentUserUid)
-                .orderByChild("uid");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Timber.d("getUsersList onChildAdded %s", dataSnapshot);
-                System.out.println(dataSnapshot);
-                currentUser = dataSnapshot.getValue(User.class);
-                Log.d("getUsersList ", currentUser.getUsername());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
+    public String getCurrentUserUid() {
+        return currentUserUid;
     }
 
-    public void registerUser(Activity activity, String email, String password)  {
+    private void updateCurrentUser() {
+        if (currentUserUid != null) {
+
+            UsersService.getInstance().getUserByUid(currentUserUid, this);
+//            Query query = super.databaseReference.child("users")
+//                    .child(currentUserUid)
+//                    .orderByChild("uid");
+//            query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    Timber.d("getUsersList onChildAdded %s", dataSnapshot);
+//                    System.out.println(dataSnapshot);
+//                    currentUser = dataSnapshot.getValue(User.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    System.out.println("The read failed: " + databaseError.getCode());
+//                }
+//            });
+        } else {
+            currentUser = null;
+        }
+    }
+
+    public void registerUser(Activity activity, String email, String password,
+                             AuthenticationServiceListener listener)  {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, task -> {
                     Log.d("", "createUserWithEmail:onComplete:" + task.isSuccessful());
@@ -82,6 +94,7 @@ public class AuthenticationService extends BaseService{
                     if (!task.isSuccessful()) {
                         Toast.makeText(activity, R.string.auth_failed,
                                 Toast.LENGTH_SHORT).show();
+                        listener.onRegistrationFailed(task.getException());
                     }
                 });
     }
@@ -100,6 +113,9 @@ public class AuthenticationService extends BaseService{
     }
 
     public void logOff() {
+        setCurrentUserUid(null);
+        MessagingService.getInstance().clearMessages();
+        UsersService.getInstance().clearUsers();
         firebaseAuth.signOut();
     }
 
@@ -109,5 +125,21 @@ public class AuthenticationService extends BaseService{
 
     public void removeListener(AuthStateListener listener) {
         firebaseAuth.removeAuthStateListener(listener);
+    }
+
+    @Override
+    public void onUsersDataChanged(ArrayList<User> usersList) {
+        //Unused
+    }
+
+    @Override
+    public void onUserDataReturned(User user) {
+        this.currentUser = user;
+    }
+
+    @Override
+    public void onUserCreated(User user) {
+        this.currentUserUid = user.getUid();
+        this.currentUser = user;
     }
 }

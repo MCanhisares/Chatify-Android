@@ -3,6 +3,7 @@ package com.azell.chatify_android.Services;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.azell.chatify_android.Api.Model.Message;
 import com.azell.chatify_android.Api.Model.User;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -67,12 +68,16 @@ public class UsersService extends BaseService {
         });
     }
 
-    public void getUserByUid(String uid, AuthenticationServiceListener listener) {
-        Query query = super.databaseReference.child("users").orderByChild("uid").equalTo(uid);
+    public void getUserByUid(String uid, UserServiceListener listener) {
+        Query query = super.databaseReference.child("users")
+                .child(uid)
+                .orderByChild("uid");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                Timber.d("getUsersList onChildAdded %s", dataSnapshot);
+                System.out.println(dataSnapshot);
+                listener.onUserDataReturned(dataSnapshot.getValue(User.class));
             }
 
             @Override
@@ -82,10 +87,26 @@ public class UsersService extends BaseService {
         });
     }
 
+    public void createUser(String username, String email, String uid, UserServiceListener listener){
+        User user = new User(email, "", uid, username);
+        super.databaseReference
+                .child("users")
+                .child(uid)
+                .setValue(user);
+        listener.onUserCreated(user);
+    }
+
     private User filterUsers(DataSnapshot dataSnapshot) {
         User user = dataSnapshot.getValue(User.class);
         System.out.println(user);
         return Objects.equals(user.getUid(),
-                AuthenticationService.getInstance().getCurrentUser().getUid()) ? null : user;
+                AuthenticationService.getInstance().getCurrentUserUid()) ? null : user;
+    }
+
+    public void clearUsers() {
+        if (users != null) {
+            this.users.clear();
+            this.users = null;
+        }
     }
 }

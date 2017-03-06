@@ -8,4 +8,5 @@ import com.azell.chatify_android.Api.Model.User;
 
 public interface AuthenticationServiceListener {
     void onUserLoginFailed(Exception exception);
+    void onRegistrationFailed(Exception exception);
 }

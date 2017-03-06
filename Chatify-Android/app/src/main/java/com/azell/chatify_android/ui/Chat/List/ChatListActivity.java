@@ -46,14 +46,12 @@ public class ChatListActivity extends BaseActivity implements UserServiceListene
     }
 
     private void init() {
+        getSupportActionBar().setTitle(R.string.chat_list_activity_title);
         authenticationService = AuthenticationService.getInstance();
         usersService = UsersService.getInstance();
         usersService.getUsersList(this);
-        System.out.println("getUsersList");
-
         listAdapter = new ChatListAdapter(this, usersList);
         listUsersChat.setAdapter(listAdapter);
-
         listUsersChat.setOnItemClickListener( (parent, view, position, id) ->  {
             User user = usersList.get(position);
             ActivityRoutes.getInstance().openChatDetailActivity(this, user);
@@ -73,7 +71,8 @@ public class ChatListActivity extends BaseActivity implements UserServiceListene
                 authenticationService.logOff();
                 ActivityRoutes.getInstance().openLoginActivity(this);
                 break;
-            case R.id.menu_user_settings:
+            case R.id.menu_user_profile:
+                ActivityRoutes.getInstance().openProfileActivity(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -85,5 +84,15 @@ public class ChatListActivity extends BaseActivity implements UserServiceListene
         this.usersList.addAll(usersList);
         listAdapter.notifyDataSetChanged();
         System.out.println(this.usersList);
+    }
+
+    @Override
+    public void onUserDataReturned(User user) {
+        //UNUSED
+    }
+
+    @Override
+    public void onUserCreated(User user) {
+        //UNUSED
     }
 }

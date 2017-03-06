@@ -39,11 +39,7 @@ public class ChatListAdapter extends ArrayAdapter<User> {
         ImageView userImageView = (ImageView) view.findViewById(R.id.image_chat_list_item);
         User user = getItem(position);
         System.out.println(user);
-        String url = user.getProfileImageUrl().isEmpty()
-                ? "https://firebasestorage.googleapis.com/v0/b/" +
-                        "chatify-cf602.appspot.com/o/profileImages%2Fprofile%20generic.jpg?" +
-                        "alt=media&token=a33ee386-3a21-418a-9ca9-5d694db57383"
-                : user.getProfileImageUrl();
+        String url = user.getProfileImageUrl();
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(Color.BLACK)
                 .borderWidthDp(3)

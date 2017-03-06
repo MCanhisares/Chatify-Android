@@ -9,15 +9,23 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.azell.chatify_android.Api.Model.Message;
 import com.azell.chatify_android.Api.Model.User;
 import com.azell.chatify_android.R;
+import com.azell.chatify_android.Services.AuthenticationService;
+import com.azell.chatify_android.Services.MessagingService;
+import com.azell.chatify_android.Services.MessagingServiceListener;
 import com.azell.chatify_android.Utils.Enums.LoginResults;
 import com.azell.chatify_android.ui.BaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ChatDetailActivity extends BaseActivity {
+public class ChatDetailActivity extends BaseActivity implements MessagingServiceListener {
 
     private static final String USER = "USER";
 
@@ -29,6 +37,9 @@ public class ChatDetailActivity extends BaseActivity {
     ListView listMessage;
 
     private User user;
+    private MessagingService messagingService;
+    private MessageListAdapter messageListAdapter;
+    private ArrayList<Message> messages = new ArrayList<>();
 
     public static Intent createIntent(Context context, User user) {
         Intent intent = new Intent(context, ChatDetailActivity.class);
@@ -50,33 +61,23 @@ public class ChatDetailActivity extends BaseActivity {
     private void init(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(user.getUsername().toUpperCase());
-    }
-
-    private void displayChatMessages() {
-
+        messagingService = MessagingService.getInstance();
+        messagingService.getMessagesFor(AuthenticationService.getInstance().getCurrentUser(),
+                user, this);
+        messageListAdapter = new MessageListAdapter(this, messages);
+        listMessage.setAdapter(messageListAdapter);
+        buttonSendMessage.setOnClickListener(v -> {
+            if (!editMessage.getText().toString().isEmpty()) {
+                messagingService.postMessage(editMessage.getText().toString(), user);
+                editMessage.setText("");
+            }
+        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LoginResults.SIGN_IN_REQUEST_CODE.code) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this,
-                        "Successfully signed in. Welcome!",
-                        Toast.LENGTH_LONG)
-                        .show();
-                displayChatMessages();
-            } else {
-                Toast.makeText(this,
-                        "We couldn't sign you in. Please try again later.",
-                        Toast.LENGTH_LONG)
-                        .show();
-
-                // Close the app
-                finish();
-            }
-        }
-
+    public void onMessagesDataChanged(List<Message> messages) {
+        this.messages.clear();
+        this.messages.addAll(messages);
+        this.messageListAdapter.notifyDataSetChanged();
     }
 }

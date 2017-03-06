@@ -35,6 +35,7 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
 
         userTextView.setText(message.getUsername());
         messageTextView.setText(message.getText());
+        view.setEnabled(false);
         //TODO IMPLEMENT MESSAGE TIME
 //        timeMessageTextView.setText(message.getTime());
         return view;

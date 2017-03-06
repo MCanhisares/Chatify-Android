@@ -36,7 +36,7 @@ public class MessagingService extends BaseService {
     List<Message> messages;
 
     public void getMessagesFor(User currentUser, User toUser, MessagingServiceListener listener) {
-        Query query = super.databaseReference.child("messages").orderByKey();
+        Query query = super.databaseReference.child("messages");
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
@@ -63,6 +63,13 @@ public class MessagingService extends BaseService {
         });
     }
 
+    public void postMessage(String messageText, User toUser) {
+        Message message = new Message(messageText, toUser.getUid(),
+                AuthenticationService.getInstance().getCurrentUser().getUid(),
+                AuthenticationService.getInstance().getCurrentUser().getUsername());
+        super.databaseReference.child("messages").push().setValue(message);
+    }
+
     private Message filterMessageByUser(User currentUser, User toUser, DataSnapshot dataSnapshot) {
         Message message = dataSnapshot.getValue(Message.class);
         System.out.println(message);
@@ -73,5 +80,12 @@ public class MessagingService extends BaseService {
             return message;
         }
         return null;
+    }
+
+    public void clearMessages() {
+        if (messages != null) {
+            this.messages.clear();
+            this.messages = null;
+        }
     }
 }

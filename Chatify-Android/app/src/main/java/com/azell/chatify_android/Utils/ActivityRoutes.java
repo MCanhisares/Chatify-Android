@@ -7,6 +7,7 @@ import com.azell.chatify_android.ui.Chat.Detail.ChatDetailActivity;
 import com.azell.chatify_android.ui.Chat.List.ChatListActivity;
 import com.azell.chatify_android.ui.Login.LoginActivity;
 import com.azell.chatify_android.ui.Login.RegisterActivity;
+import com.azell.chatify_android.ui.Profile.ProfileActivity;
 
 /**
  * Created by mcanhisares on 01/03/17.
@@ -36,5 +37,9 @@ public class ActivityRoutes {
 
     public void openChatDetailActivity(Context context, User user) {
         context.startActivity(ChatDetailActivity.createIntent(context, user));
+    }
+
+    public void openProfileActivity(Context context) {
+        context.startActivity(ProfileActivity.createIntent(context));
     }
 }

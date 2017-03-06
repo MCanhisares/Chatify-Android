@@ -1,8 +1,18 @@
 <resources>
     <string name="app_name">Chatify Android</string>
     <string name="email">Email</string>
-    <string name="ainda_n_o_sou_cadastrado">Ainda não sou cadastrado</string>
+    <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
+    <string name="register">Register</string>
     <string name="password">Password</string>
-    <string name="auth_failed">Registration failed! Try again later.</string>
+    <string name="username">Username</string>
+    <string name="auth_failed">Login failed! Try again later.</string>
+    <string name="registration_failed">Registration failed! Try again later.</string>
+    <string name="register_activity_title">Register</string>
+    <string name="login_activity_title">Login</string>
+    <string name="chat_list_activity_title">Home</string>
+    <string name="profile_activity_title">Profile</string>
+    <string name="menu_title_profile">Profile</string>
+    <string name="menu_title_sign_out">Sign out</string>
+    <string name="pick_image_intent_text">Pick image for profile</string>
 </resources>

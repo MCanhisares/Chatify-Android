@@ -3,11 +3,14 @@ package com.azell.chatify_android.Api.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.azell.chatify_android.Api.Utils.Resources;
+
 /**
  * Created by mcanhisares on 01/03/17.
  */
 
 public class User implements Parcelable {
+
     private String email;
     private String profileImageUrl;
     private String uid;
@@ -32,7 +35,7 @@ public class User implements Parcelable {
     }
 
     public String getProfileImageUrl() {
-        return profileImageUrl;
+        return profileImageUrl.isEmpty() ? Resources.defaultProfileImageUrl : profileImageUrl;
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
@@ -54,7 +57,6 @@ public class User implements Parcelable {
     public void setUsername(String username) {
         this.username = username;
     }
-
 
     @Override
     public int describeContents() {

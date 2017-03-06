@@ -10,4 +10,6 @@ import java.util.ArrayList;
 
 public interface UserServiceListener {
     void onUsersDataChanged(ArrayList<User> usersList);
+    void onUserDataReturned(User user);
+    void onUserCreated(User user);
 }

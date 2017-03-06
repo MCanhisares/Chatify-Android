@@ -19,6 +19,7 @@ import com.azell.chatify_android.Utils.ActivityRoutes;
 import com.azell.chatify_android.ui.BaseActivity;
 import com.azell.chatify_android.ui.Chat.List.ChatListActivity;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -72,11 +73,9 @@ public class LoginActivity extends BaseActivity implements AuthenticationService
     }
 
     private void init() {
+        getSupportActionBar().setTitle(R.string.login_activity_title);
         authService = AuthenticationService.getInstance();
-
-//        //TODO REMOVE AFTER TESTING
-//        authService.logOff();
-
+        authService.logOff();
         btnLogin.setOnClickListener(v -> {
             String email = inputEmail.getText().toString();
             String password = inputPassword.getText().toString();
@@ -122,5 +121,10 @@ public class LoginActivity extends BaseActivity implements AuthenticationService
         loginProgressBar.setVisibility(View.GONE);
         Toast.makeText(this, R.string.auth_failed,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRegistrationFailed(Exception exception) {
+        //Unused
     }
 }
