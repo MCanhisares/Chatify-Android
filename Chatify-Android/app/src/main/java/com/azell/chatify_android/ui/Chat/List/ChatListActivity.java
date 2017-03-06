@@ -49,6 +49,7 @@ public class ChatListActivity extends BaseActivity implements UserServiceListene
         authenticationService = AuthenticationService.getInstance();
         usersService = UsersService.getInstance();
         usersService.getUsersList(this);
+        System.out.println("getUsersList");
 
         listAdapter = new ChatListAdapter(this, usersList);
         listUsersChat.setAdapter(listAdapter);

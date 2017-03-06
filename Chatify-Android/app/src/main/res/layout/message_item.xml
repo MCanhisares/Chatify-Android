@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/text_username_message"
         android:layout_alignParentEnd="true"
-        tools:text="07-10-2016 (21:55:24)"/>
+        android:visibility="invisible"
+        tools:text="07-10-2016 (21:55:24)" />
 
     <TextView
         android:id="@+id/text_message_content"

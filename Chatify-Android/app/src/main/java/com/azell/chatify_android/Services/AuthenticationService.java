@@ -25,7 +25,6 @@ public class AuthenticationService extends BaseService{
     private User currentUser;
     private String currentUserUid;
 
-
     private AuthenticationService() {
         firebaseAuth = FirebaseAuth.getInstance();
     }
@@ -46,6 +45,10 @@ public class AuthenticationService extends BaseService{
     public void setCurrentUserUid(String currentUserUid) {
         this.currentUserUid = currentUserUid;
         updateCurrentUser();
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     private void updateCurrentUser() {
@@ -90,8 +93,9 @@ public class AuthenticationService extends BaseService{
                     if (!task.isSuccessful()) {
                         Timber.e("signInWithEmail:failed %s", task.getException());
                         listener.onUserLoginFailed(task.getException());
+                    } else {
+                        Timber.d("Logged in successfully %s", task.getResult());
                     }
-                    Timber.d("Logged in successfully %s", task.getResult());
                 });
     }
 

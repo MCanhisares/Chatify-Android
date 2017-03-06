@@ -1,5 +1,6 @@
 package com.azell.chatify_android.Services;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.azell.chatify_android.Api.Model.User;
@@ -11,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -44,8 +46,11 @@ public class UsersService extends BaseService {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 System.out.println(dataSnapshot);
                 if (users == null) users = new ArrayList<>();
-                users.add(dataSnapshot.getValue(User.class));
-                listener.onUsersDataChanged(users);
+                User user = filterUsers(dataSnapshot);
+                if (user != null) {
+                    users.add(user);
+                    listener.onUsersDataChanged(users);
+                }
             }
 
             @Override
@@ -75,5 +80,12 @@ public class UsersService extends BaseService {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+    }
+
+    private User filterUsers(DataSnapshot dataSnapshot) {
+        User user = dataSnapshot.getValue(User.class);
+        System.out.println(user);
+        return Objects.equals(user.getUid(),
+                AuthenticationService.getInstance().getCurrentUser().getUid()) ? null : user;
     }
 }
