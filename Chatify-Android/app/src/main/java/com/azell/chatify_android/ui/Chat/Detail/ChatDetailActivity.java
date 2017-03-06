@@ -58,6 +58,12 @@ public class ChatDetailActivity extends BaseActivity implements MessagingService
         init();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        messagingService.clearMessages();
+    }
+
     private void init(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(user.getUsername().toUpperCase());

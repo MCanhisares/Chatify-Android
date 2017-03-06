@@ -13,8 +13,6 @@ import android.widget.ImageView;
 
 import com.azell.chatify_android.R;
 import com.azell.chatify_android.Services.AuthenticationService;
-import com.azell.chatify_android.Utils.ImagePicker;
-import com.azell.chatify_android.ui.Chat.List.ChatListActivity;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
